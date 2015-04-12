@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MotorIndia</string>
-
+    <string name="splash_title">MOTORINDIA</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="splashDescription">This is the splash screen Image</string>
 </resources>
