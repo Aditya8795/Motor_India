@@ -15,4 +15,9 @@
 
     <string name="action_example">Example action</string>
     <string name="title_activity_gcmregister">Register for Notifications</string>
+    <string name="fullname_GCMRegistration">Full Name</string>
+    <string name="emailID_GCMRegistration">Email ID</string>
+    <string name="register">REGISTER</string>
+    <string name="enterEmailID">enter valid Email ID here</string>
+    <string name="enterName">enter Name here</string>
 </resources>

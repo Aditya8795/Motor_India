@@ -1,24 +1,21 @@
 package in.motorindiaonline.motorindia.ui;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import in.motorindiaonline.motorindia.R;
+import in.motorindiaonline.motorindia.Utilities.AlertDialogManager;
+import in.motorindiaonline.motorindia.Utilities.ConnectionDetector;
 
 public class ArticleList extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -46,6 +43,16 @@ public class ArticleList extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        AlertDialogManager alert = new AlertDialogManager();
+        ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
+        // Check if Internet present
+        if (!connectionDetector.isConnectingToInternet()) {
+            // Internet Connection is not present
+            alert.showAlertDialog(ArticleList.this,
+                    "Internet Connection Error",
+                    "Please connect to working Internet connection", false);
+        }
     }
 
     @Override
