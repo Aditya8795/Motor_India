@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:contentDescription="@string/splashDescription"
+        android:contentDescription="@string/splashScreenImageDescription"
         android:src="@drawable/splashscreen"/>
 
 </RelativeLayout>
