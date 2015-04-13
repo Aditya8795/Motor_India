@@ -95,8 +95,7 @@ public class GCMRegister extends ActionBarActivity {
             editor.apply();
 
             // DEBUGGING
-            Log.i("DEBUG", "register activity is done");
-            Log.i("DEBUG","registering with name: "+name+" and email: "+email);
+            Log.i(CommonUtilities.TAG,"registering with name: "+name+" and email: "+email);
 
             // START
             // Make sure the device has the proper dependencies.
@@ -113,9 +112,12 @@ public class GCMRegister extends ActionBarActivity {
 
             // Check if RegistrationId is not present
             if (regId.equals("")) {
+                Log.i(CommonUtilities.TAG,"Registration is not present, created new ID using GCMRegistrar");
                 // Registration is not present, register now with GCM
                 GCMRegistrar.register(this, CommonUtilities.SENDER_ID);
-                Log.i(CommonUtilities.TAG,"Registration is not present, created new ID using GCMRegistrar");
+                // Keep in mind that in.motorindiaonline.motorindia.gcm.GCMIntentService.onRegistered() is called after
+                // they register the mobile with Google
+
                 Intent myIntent = new Intent(GCMRegister.this, ArticleList.class);
                 myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 GCMRegister.this.startActivity(myIntent);
@@ -125,7 +127,8 @@ public class GCMRegister extends ActionBarActivity {
                 if (GCMRegistrar.isRegisteredOnServer(this)) {
                     // Skips registration.
                     Log.i("DEBUG","this device is already registered with an ID on the google server "+regId);
-
+                    editor.putBoolean("GCM_REGISTRATION_STATUS", GCMRegistrar.isRegisteredOnServer(this));
+                    Log.i(CommonUtilities.TAG,"Is registration now required? - "+GCMRegistrar.isRegisteredOnServer(this));
                     Intent myIntent = new Intent(GCMRegister.this, ArticleList.class);
                     myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     GCMRegister.this.startActivity(myIntent);
@@ -135,6 +138,7 @@ public class GCMRegister extends ActionBarActivity {
                     // Try to register again, but not in the UI thread.
                     // It's also necessary to cancel the thread onDestroy(),
                     // hence the use of AsyncTask instead of a raw thread.
+                    Log.i(CommonUtilities.TAG,"Going to register the device with google server");
                     final Context context = this;
                     mRegisterTask = new AsyncTask<Void, Void, Void>() {
 
@@ -151,8 +155,9 @@ public class GCMRegister extends ActionBarActivity {
                             mRegisterTask = null;
                         }
                     };
-
                     mRegisterTask.execute(null, null, null);
+                    editor.putBoolean("GCM_REGISTRATION_STATUS", GCMRegistrar.isRegisteredOnServer(this));
+                    Log.i(CommonUtilities.TAG,"Is registration now required? - "+GCMRegistrar.isRegisteredOnServer(this));
                     // We don't have to worry, we can move on to the actual app,
                     // In the background the registration will be going on
                     Intent myIntent = new Intent(GCMRegister.this, ArticleList.class);
@@ -160,12 +165,12 @@ public class GCMRegister extends ActionBarActivity {
                     GCMRegister.this.startActivity(myIntent);
                 }
             }
-
         } else {
-            // user hasn't filled that data
-            // ask him to fill the form
+            Log.i(CommonUtilities.TAG,"User has tried registering with empty fields");
+            // user hasn't filled that data ask him to fill the form
             alert.showAlertDialog(GCMRegister.this, "Registration Error!", "Please enter your details", false);
         }
+
     }
 
     /**
@@ -203,7 +208,7 @@ public class GCMRegister extends ActionBarActivity {
         }
         try {
             unregisterReceiver(mHandleMessageReceiver);
-            GCMRegistrar.onDestroy(this);
+            GCMRegistrar.onDestroy(getApplicationContext());
         } catch (Exception e) {
             Log.i("DEBUG","error!!");
             Log.e("UnRegisterReceiverError", e.getMessage());

@@ -38,12 +38,14 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onRegistered(Context context, String registrationId) {
         Log.i(TAG, "Device registered: regId = " + registrationId);
         CommonUtilities.displayMessage(context, "Your device is registered with GCM");
-        SharedPreferences.Editor editor = getSharedPreferences("GENERAL_DATA", MODE_PRIVATE).edit();
-        editor.putBoolean("GCM_REGISTRATION_STATUS", true);
-        editor.apply();
+
         SharedPreferences prefs = getSharedPreferences("GENERAL_DATA", MODE_PRIVATE);
         final String name = prefs.getString("USER_NAME", "Unknown!");
         final String email = prefs.getString("USER_EMAIL", "Unknown!");
+
+        Log.i(TAG,"Sending data to OUR server name: "+name+" email: "+email+" regId: "+registrationId);
+        //HERE once the mobile is registered with google using the Project Number
+        //we send the user data to our server so that we can send notifications to him/her
         ServerUtilities.register(context, name, email, registrationId);
     }
 

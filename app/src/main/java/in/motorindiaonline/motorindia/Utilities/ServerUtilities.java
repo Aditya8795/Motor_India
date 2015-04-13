@@ -28,9 +28,9 @@ public final class ServerUtilities {
      *
      */
     public static void register(final Context context, String name, String email, final String regId) {
-
+        Log.i(CommonUtilities.TAG,"sending data ie registering with our own server");
         Log.i(CommonUtilities.TAG, "registering device (regId = " + regId + ")");
-        String serverUrl = CommonUtilities.SERVER_URL;
+        String serverUrl = CommonUtilities.SERVER_URL+"gcm_server_php/register.php";
         Map<String, String> params = new HashMap<>();
         params.put("regId", regId);
         params.put("name", name);
@@ -45,7 +45,7 @@ public final class ServerUtilities {
             try {
                 post(serverUrl, params);
                 GCMRegistrar.setRegisteredOnServer(context, true);
-                CommonUtilities.displayMessage(context, "this is confused");
+                CommonUtilities.displayMessage(context, "We have completed GCM registration");
                 return;
             } catch (IOException e) {
                 // Here we are simplifying and retrying on any error; in a real
@@ -76,6 +76,7 @@ public final class ServerUtilities {
     public static void unregister(final Context context, final String regId) {
 
         Log.i("", "going to unregister device (regId = " + regId + ")");
+        //TODO IMPLEMENT UNREGISTER of the users
         String serverUrl = CommonUtilities.SERVER_URL + "/unregister";
         Map<String, String> params = new HashMap<>();
         params.put("regId", regId);
