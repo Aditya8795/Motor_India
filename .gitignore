@@ -4,3 +4,10 @@
 /.idea/libraries
 .DS_Store
 /build
+
+.idea/
+obj/
+*.iml
+local.properties
+*.keystore
+gradle.properties
