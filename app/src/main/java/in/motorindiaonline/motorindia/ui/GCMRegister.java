@@ -1,8 +1,13 @@
 package in.motorindiaonline.motorindia.ui;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
@@ -10,13 +15,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gcm.GCMRegistrar;
 
 import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.Utilities.AlertDialogManager;
 import in.motorindiaonline.motorindia.Utilities.CommonUtilities;
 import in.motorindiaonline.motorindia.Utilities.ConnectionDetector;
+import in.motorindiaonline.motorindia.Utilities.ServerUtilities;
+import in.motorindiaonline.motorindia.Utilities.WakeLocker;
 
 public class GCMRegister extends ActionBarActivity {
+
+    // AsyncTask used to register the user
+    AsyncTask<Void, Void, Void> mRegisterTask;
 
     AlertDialogManager alert = new AlertDialogManager();
 
@@ -38,7 +51,7 @@ public class GCMRegister extends ActionBarActivity {
         super.onStart();
         ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
         // Check if Internet present
-        if (!connectionDetector.isConnectingToInternet()) {
+        if (!connectionDetector.isConnectedInternet()) {
             // Internet Connection is not present
             // Here as I need the dialog to be a inner class to send the intent and call finish
             new AlertDialog.Builder(this)
@@ -68,20 +81,133 @@ public class GCMRegister extends ActionBarActivity {
         userEmail      = (EditText) findViewById(R.id.EditTextEmailID);
         buttonRegister = (Button) findViewById(R.id.ButtonGCMRegister);
 
-        String name  = userName.getText().toString();
-        String email = userEmail.getText().toString();
+        final String name  = userName.getText().toString();
+        final String email = userEmail.getText().toString();
 
         // Check if user filled the form
         if (name.trim().length() > 0 && email.trim().length() > 0) {
 
-            //TODO more things here!!
+
+            // Store the name and email into AppData
+            SharedPreferences.Editor editor = getSharedPreferences("GENERAL_DATA", MODE_PRIVATE).edit();
+            editor.putString("USER_NAME", name);
+            editor.putString("USER_EMAIL", email);
+            editor.apply();
+
             // DEBUGGING
             Log.i("DEBUG", "register activity is done");
             Log.i("DEBUG","registering with name: "+name+" and email: "+email);
+
+            // START
+            // Make sure the device has the proper dependencies.
+            GCMRegistrar.checkDevice(this);
+
+            // Make sure the manifest was properly set
+            GCMRegistrar.checkManifest(this);
+
+            // Set a broadcast receiver for incoming GCM notifications
+            registerReceiver(mHandleMessageReceiver, new IntentFilter(CommonUtilities.DISPLAY_MESSAGE_ACTION));
+
+            // Get GCM registration id
+            final String regId = GCMRegistrar.getRegistrationId(this);
+
+            // Check if RegistrationId is not present
+            if (regId.equals("")) {
+                // Registration is not present, register now with GCM
+                GCMRegistrar.register(this, CommonUtilities.SENDER_ID);
+                Log.i(CommonUtilities.TAG,"Registration is not present, created new ID using GCMRegistrar");
+                Intent myIntent = new Intent(GCMRegister.this, ArticleList.class);
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                GCMRegister.this.startActivity(myIntent);
+            }
+            else {
+                // Device is already registered on GCM
+                if (GCMRegistrar.isRegisteredOnServer(this)) {
+                    // Skips registration.
+                    Log.i("DEBUG","this device is already registered with an ID on the google server "+regId);
+
+                    Intent myIntent = new Intent(GCMRegister.this, ArticleList.class);
+                    myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    GCMRegister.this.startActivity(myIntent);
+                }
+                else {
+                    // As no such registration has happened on google server
+                    // Try to register again, but not in the UI thread.
+                    // It's also necessary to cancel the thread onDestroy(),
+                    // hence the use of AsyncTask instead of a raw thread.
+                    final Context context = this;
+                    mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            // Register on our server
+                            // On server creates a new user
+                            ServerUtilities.register(context, name, email, regId);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void result) {
+                            mRegisterTask = null;
+                        }
+                    };
+
+                    mRegisterTask.execute(null, null, null);
+                    // We don't have to worry, we can move on to the actual app,
+                    // In the background the registration will be going on
+                    Intent myIntent = new Intent(GCMRegister.this, ArticleList.class);
+                    myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    GCMRegister.this.startActivity(myIntent);
+                }
+            }
+
         } else {
             // user hasn't filled that data
             // ask him to fill the form
             alert.showAlertDialog(GCMRegister.this, "Registration Error!", "Please enter your details", false);
         }
+    }
+
+    /**
+     * Receiving push messages
+     * */
+    private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get the message from the incoming GCM
+            String newMessage = intent.getExtras().getString(CommonUtilities.EXTRA_MESSAGE);
+            // Message has been fetched
+            Log.i(CommonUtilities.TAG,newMessage);
+            // Waking up mobile if it is sleeping
+            WakeLocker.acquire(getApplicationContext());
+
+            /**
+             * Take appropriate action on this message
+             * depending upon your app requirement
+             * For now i am just displaying it on the screen
+             * */
+
+            // Showing received message
+            Toast.makeText(getApplicationContext(), "ALERT! " + newMessage, Toast.LENGTH_LONG).show();
+
+            // Releasing wake lock
+            WakeLocker.release();
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        if (mRegisterTask != null) {
+            Log.i("DEBUG","We just canceled the asyncTask which was registering user");
+            mRegisterTask.cancel(true);
+        }
+        try {
+            unregisterReceiver(mHandleMessageReceiver);
+            GCMRegistrar.onDestroy(this);
+        } catch (Exception e) {
+            Log.i("DEBUG","error!!");
+            Log.e("UnRegisterReceiverError", e.getMessage());
+        }
+        super.onDestroy();
     }
 }

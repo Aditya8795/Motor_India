@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 
+import in.motorindiaonline.motorindia.R;
+
 public class AlertDialogManager {
 
     /**
@@ -29,7 +31,7 @@ public class AlertDialogManager {
                          Log.i(CommonUtilities.TAG,"Cancel has been clicked");
                      }
                  })
-                 .setIcon(android.R.drawable.ic_dialog_alert)
+                 .setIcon(R.drawable.alert)
                  .setCancelable(status)
                  .show();
     }

@@ -7,10 +7,17 @@ public class CommonUtilities {
     //TODO get a proper server with the PHP files up
 
     // give your server registration url here
-    public static final String SERVER_URL = "http://742ece35.ngrok.com/gcm_server_php/register.php";
+    public static final String SERVER_URL = "http://239135c9.ngrok.com/gcm_server_php/register.php";
 
-    // Google project id
-    public static final String SENDER_ID = "256673637169";
+    // Project ID: angular-glyph-91419  Project Number: 550448643561
+    public static final String SENDER_ID = "550448643561";
+
+    /*
+    API key	AIzaSyCv0VxOX13zG2O9YJ5DUVKo19B4Ko-9kGA
+    IPs	0.0.0.0/0
+    Activation date
+    Apr 13, 2015, 6:30:00 PM
+    */
 
     // Amount of time (in milliseconds) that the splash screen should be shown
     public static final int SPLASH_SCREEN_DELAY = 1500;
@@ -19,7 +26,7 @@ public class CommonUtilities {
 
     public static final String DISPLAY_MESSAGE_ACTION = "in.motorindiaonline.motorindia.DISPLAY_MESSAGE";
 
-    static final String EXTRA_MESSAGE = "message";
+    public static final String EXTRA_MESSAGE = "message";
 
     /**
      * Notifies UI to display a message.
@@ -31,7 +38,7 @@ public class CommonUtilities {
      * @param message message to be displayed.
      */
 
-    static void displayMessage(Context context, String message) {
+    public static void displayMessage(Context context, String message) {
         Intent intent = new Intent(DISPLAY_MESSAGE_ACTION);
         intent.putExtra(EXTRA_MESSAGE, message);
         context.sendBroadcast(intent);

@@ -47,7 +47,7 @@ public class ArticleList extends ActionBarActivity
         AlertDialogManager alert = new AlertDialogManager();
         ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
         // Check if Internet present
-        if (!connectionDetector.isConnectingToInternet()) {
+        if (!connectionDetector.isConnectedInternet()) {
             // Internet Connection is not present
             alert.showAlertDialog(ArticleList.this,
                     "Internet Connection Error",

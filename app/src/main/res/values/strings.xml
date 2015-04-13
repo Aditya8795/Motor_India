@@ -20,4 +20,7 @@
     <string name="register">REGISTER</string>
     <string name="enterEmailID">enter valid Email ID here</string>
     <string name="enterName">enter Name here</string>
+    <string name="server_unregister_error">Unable to register</string>
+    <string name="gcm_unregistered">The device is unregistered</string>
+    <string name="gcm_deleted">Notifications have been deleted</string>
 </resources>
