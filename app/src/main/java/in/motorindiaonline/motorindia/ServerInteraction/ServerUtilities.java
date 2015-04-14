@@ -1,4 +1,4 @@
-package in.motorindiaonline.motorindia.Utilities;
+package in.motorindiaonline.motorindia.ServerInteraction;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import in.motorindiaonline.motorindia.R;
+import in.motorindiaonline.motorindia.Utilities.CommonUtilities;
 
 public final class ServerUtilities {
 
@@ -103,7 +104,7 @@ public final class ServerUtilities {
      * @throws java.io.IOException propagated from POST.
      */
     private static void post(String endpoint, Map<String, String> params) throws IOException {
-
+        Log.i(CommonUtilities.TAG,"Executing POST in server Utilities");
         URL url;
         try {
             url = new URL(endpoint);
@@ -143,6 +144,7 @@ public final class ServerUtilities {
             Log.i("DEBUG", "response code" + Integer.toString(status));
 
             if (status != 200) {
+                Log.i(CommonUtilities.TAG,"Post failed with error code " + status);
                 throw new IOException("Post failed with error code " + status);
             }
         }

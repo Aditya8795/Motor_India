@@ -12,7 +12,7 @@ import com.google.android.gcm.GCMBaseIntentService;
 
 import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.Utilities.CommonUtilities;
-import in.motorindiaonline.motorindia.Utilities.ServerUtilities;
+import in.motorindiaonline.motorindia.ServerInteraction.ServerUtilities;
 import in.motorindiaonline.motorindia.ui.SplashScreen;
 
 public class GCMIntentService extends GCMBaseIntentService {

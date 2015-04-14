@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.Utilities.CommonUtilities;
 
@@ -32,8 +35,9 @@ public class SplashScreen extends ActionBarActivity {
         if (checkPlayServices()) {
             // If this check succeeds, proceed with normal processing.
             // Otherwise, prompt user to get valid Play Services APK.
-
+            Log.i(CommonUtilities.TAG,"MOBILE has PlayServices Installed");
         }
+
         // Get the status of registration from system memory
         SharedPreferences prefs = getSharedPreferences("GENERAL_DATA", MODE_PRIVATE);
         final Boolean GCMRegistered = prefs.getBoolean("GCM_REGISTRATION_STATUS", false);
@@ -66,19 +70,19 @@ public class SplashScreen extends ActionBarActivity {
      * the Google Play Store or enable it in the device's system settings.
      */
     private boolean checkPlayServices() {
-        /*
+        //TODO make this work
+
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Log.i(CommonUtilities.TAG, "This device is not supported.");
                 finish();
             }
             return false;
         }
-        */
         return true;
     }
 }

@@ -8,7 +8,7 @@ public class CommonUtilities {
     //TODO get a proper server with the PHP files up
 
     // give your server registration url here gcm_server_php/register.php
-    public static final String SERVER_URL = "http://3f38715.ngrok.com/";
+    public static final String SERVER_URL = "http://69baba61.ngrok.com/";
 
     // Project ID: angular-glyph-91419  Project Number: 550448643561
     public static final String SENDER_ID = "256673637169";

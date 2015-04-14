@@ -23,7 +23,7 @@ import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.Utilities.AlertDialogManager;
 import in.motorindiaonline.motorindia.Utilities.CommonUtilities;
 import in.motorindiaonline.motorindia.Utilities.ConnectionDetector;
-import in.motorindiaonline.motorindia.Utilities.ServerUtilities;
+import in.motorindiaonline.motorindia.ServerInteraction.ServerUtilities;
 import in.motorindiaonline.motorindia.Utilities.WakeLocker;
 
 public class GCMRegister extends ActionBarActivity {
@@ -44,6 +44,7 @@ public class GCMRegister extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gcmregister);
+        Log.i(CommonUtilities.TAG, "OnCreate of GCMRegister");
     }
 
     @Override
@@ -86,7 +87,7 @@ public class GCMRegister extends ActionBarActivity {
 
         // Check if user filled the form
         if (name.trim().length() > 0 && email.trim().length() > 0) {
-
+            Log.i(CommonUtilities.TAG,"User has submitted some data");
 
             // Store the name and email into AppData
             SharedPreferences.Editor editor = getSharedPreferences("GENERAL_DATA", MODE_PRIVATE).edit();
@@ -104,19 +105,26 @@ public class GCMRegister extends ActionBarActivity {
             // Make sure the manifest was properly set
             GCMRegistrar.checkManifest(this);
 
+            Log.i(CommonUtilities.TAG,"Before broadcast receiver is set ");
             // Set a broadcast receiver for incoming GCM notifications
             registerReceiver(mHandleMessageReceiver, new IntentFilter(CommonUtilities.DISPLAY_MESSAGE_ACTION));
+            Log.i(CommonUtilities.TAG,"After broadcast receiver is set ");
 
             // Get GCM registration id
             final String regId = GCMRegistrar.getRegistrationId(this);
 
+            Log.i(CommonUtilities.TAG,"This is the regID: "+regId+"  <-- before this");
             // Check if RegistrationId is not present
             if (regId.equals("")) {
-                Log.i(CommonUtilities.TAG,"Registration is not present, created new ID using GCMRegistrar");
+                Log.i(CommonUtilities.TAG,"Registration is not present, going to register with google");
+
                 // Registration is not present, register now with GCM
                 GCMRegistrar.register(this, CommonUtilities.SENDER_ID);
+
                 // Keep in mind that in.motorindiaonline.motorindia.gcm.GCMIntentService.onRegistered() is called after
                 // they register the mobile with Google
+
+                Log.i(CommonUtilities.TAG,"Registration will happen async with MainUI moving on to the ArticleList");
 
                 Intent myIntent = new Intent(GCMRegister.this, ArticleList.class);
                 myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
