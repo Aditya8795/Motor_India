@@ -27,7 +27,12 @@ public class CommonUtilities {
 
     public static final String DISPLAY_MESSAGE_ACTION = "in.motorindiaonline.motorindia.DISPLAY_MESSAGE";
 
-    public static final String EXTRA_MESSAGE = "message";
+    // when we send the user to show him the article he clicked, this is used as the 'key' for sending the 'id' of the article to be displayed
+    public final static String EXTRA_MESSAGE = "com.spider.motorindia.ID";
+    // this is the key for the image URL
+    public final static String EXTRA_URL = "com.spider.motorindia.URL";
+    // this is the key for the article heading
+    public final static String EXTRA_TITLE = "com.spider.motorindia.TITLE";
 
     /**
      * Notifies UI to display a message.
