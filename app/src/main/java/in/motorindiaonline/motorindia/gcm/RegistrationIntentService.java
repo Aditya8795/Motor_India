@@ -10,10 +10,8 @@ package in.motorindiaonline.motorindia.gcm;
 */
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmPubSub;
@@ -34,12 +32,12 @@ public class RegistrationIntentService extends IntentService {
     public RegistrationIntentService() {
         // used to name the worker thread
         super(TAG);
+        Log.i(TAG,"Constructor has been called");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
+        Log.i(TAG,"Intent to service has been received ");
         try {
             // In the (unlikely) event that multiple refresh operations occur simultaneously,
             // ensure that they are processed sequentially.
@@ -59,6 +57,7 @@ public class RegistrationIntentService extends IntentService {
                 String name = intent.getStringExtra("NAME");
                 String email = intent.getStringExtra("EMAIL");
 
+                Log.i(TAG," Trying to Fetch token");
                 // [START register_for_gcm]
                 // Initially this call goes out to the network to retrieve the token, subsequent calls
                 // are local.
@@ -77,17 +76,19 @@ public class RegistrationIntentService extends IntentService {
                 // Subscribe to topic channels
                 subscribeTopics(token);
 
+                SharedPreferences.Editor editor = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE).edit();
                 // You should store a boolean that indicates whether the generated token has been
                 // sent to your server. If the boolean is false, send the token to your server,
                 // otherwise your server should have already received the token.
-                sharedPreferences.edit().putBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, true).apply();
+                editor.putBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, true).apply();
                 // [END register_for_gcm]
             }
         } catch (Exception e) {
             Log.d(TAG, "Failed to complete token refresh", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
-            sharedPreferences.edit().putBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, false).apply();
+            SharedPreferences.Editor editor = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE).edit();
+            editor.putBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, false).apply();
         }
     }
 
@@ -100,10 +101,17 @@ public class RegistrationIntentService extends IntentService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token,String name, String email) {
-        //TODO REMEMBER ABOUT boolean sentToken = sharedPreferences.getBoolean(MotorIndiaPreferences.SENT_TOKEN_TO_SERVER, false);
-        Log.i(TAG,"Going to register the device with google server");
-        final Context context = this;
-        ServerUtilities.register(context,name, email, token);
+        Log.i(TAG,"Going to register the device with OUR server");
+        if(ServerUtilities.register(name, email, token)){
+            SharedPreferences.Editor editor = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE).edit();
+            editor.putBoolean(MotorIndiaPreferences.SENT_TOKEN_TO_SERVER, true).apply();
+            Log.i(TAG, "it is registered on server");
+        }
+        else{
+            SharedPreferences.Editor editor = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE).edit();
+            editor.putBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, false).apply();
+            Log.i(TAG, "it is NOT registered on server");
+        }
     }
 
     // In our case its just the global topic, when we make a app using

@@ -17,7 +17,7 @@ public class ConnectionDetector {
      * Checking for all possible internet providers
      * **/
     public boolean isConnectedInternet() {
-        Log.i("DEBUG","checking if connected to the internet");
+        Log.i(TAG,"checking if connected to the internet");
         ConnectivityManager connectivity = (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
@@ -30,13 +30,13 @@ public class ConnectionDetector {
                         // to most of the webPages.
                         // THUS we shall add httpParameters for ALL network operations otherwise
                         // we will have the app crash after waiting for a long time
-                        Log.i("DEBUG","connected");
+                        Log.i(TAG,"connected");
                         return isConnectedMotorIndia();
                     }
                 }
             }
         }
-        Log.i("DEBUG","NOT connected");
+        Log.i(TAG,"NOT connected");
         return false;
     }
 

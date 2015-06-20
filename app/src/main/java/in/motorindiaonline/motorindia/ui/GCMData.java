@@ -62,7 +62,7 @@ public class GCMData extends ActionBarActivity {
     public void SubmitRegistrationDetails(View view) {
         EditText userName = (EditText) findViewById(R.id.EditTextFullName);
         EditText userEmail = (EditText) findViewById(R.id.EditTextEmailID);
-        CheckBox notificationCheckBok = (CheckBox) findViewById(R.id.checkbox);
+        CheckBox notificationCheckBok = (CheckBox) findViewById(R.id.checkBoxNotification);
 
         final String name = userName.getText().toString();
         final String eMail = userEmail.getText().toString();

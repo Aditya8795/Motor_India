@@ -1,9 +1,6 @@
 package in.motorindiaonline.motorindia.ServerInteraction;
 
-import android.content.Context;
 import android.util.Log;
-
-import com.google.android.gcm.GCMRegistrar;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,11 +12,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.Utilities.CommonData;
 
 public final class ServerUtilities {
 
+    private static final String TAG = "Register with server";
+
+    // Implementation of exponential backoff
     private static final int MAX_ATTEMPTS = 5;
     private static final int BACKOFF_MILLI_SECONDS = 2000;
     private static final Random random = new Random();
@@ -28,10 +27,10 @@ public final class ServerUtilities {
      * Register this account/device pair within the server.
      *
      */
-    public static void register(final Context context, String name, String email, final String regId) {
-        Log.i(CommonData.TAG,"sending data ie registering with our own server");
-        Log.i(CommonData.TAG, "registering device (regId = " + regId + ")");
-        String serverUrl = CommonData.SERVER_URL+"gcm_server_php/register.php";
+    public static boolean register(String name, String email, final String regId) {
+        Log.i(TAG,"sending data ie registering with our own server");
+        Log.i(TAG, "registering device (regId = " + regId + ")");
+        String serverUrl = CommonData.SERVER_URL+"register.php";
         Map<String, String> params = new HashMap<>();
         params.put("regId", regId);
         params.put("name", name);
@@ -42,57 +41,32 @@ public final class ServerUtilities {
         // As the server might be down, we will retry it a couple
         // times.
         for (int i = 1; i <= MAX_ATTEMPTS; i++) {
-            Log.d(CommonData.TAG, "Attempt #" + i + " to register");
+            Log.d(TAG, "Attempt #" + i + " to register");
             try {
                 post(serverUrl, params);
-                GCMRegistrar.setRegisteredOnServer(context, true);
-                Log.i("DEBUG","it is registered on server");
-                return;
+                Log.i(TAG, "it is registered on server");
+                return true;
             } catch (IOException e) {
                 // Here we are simplifying and retrying on any error; in a real
                 // application, it should retry only on unrecoverable errors
                 // (like HTTP error code 503).
-                Log.e(CommonData.TAG, "Failed to register on attempt " + i + ":" + e);
+                Log.e(TAG, "Failed to register on attempt " + i + ":" + e);
                 if (i == MAX_ATTEMPTS) {
                     break;
                 }
                 try {
-                    Log.d(CommonData.TAG, "Sleeping for " + backoff + " ms before retry");
+                    Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
                     Thread.sleep(backoff);
                 } catch (InterruptedException e1) {
                     // Activity finished before we complete - exit.
-                    Log.d(CommonData.TAG, "Thread interrupted: abort remaining retries!");
+                    Log.d(TAG, "Thread interrupted: abort remaining retries!");
                     Thread.currentThread().interrupt();
-                    return;
                 }
                 // increase backoff exponentially
                 backoff *= 2;
             }
         }
-    }
-
-    /**
-     * Unregister this account/device pair within the server.
-     */
-    public static void unregister(final Context context, final String regId) {
-
-        Log.i("", "going to unregister device (regId = " + regId + ")");
-        //TODO IMPLEMENT UNREGISTER of the users
-        String serverUrl = CommonData.SERVER_URL + "/unregister";
-        Map<String, String> params = new HashMap<>();
-        params.put("regId", regId);
-        try {
-            post(serverUrl, params);
-            GCMRegistrar.setRegisteredOnServer(context, false);
-        } catch (IOException e) {
-            // At this point the device is unregistered from GCM, but still
-            // registered in the server.
-            // We could try to unregister again, but it is not necessary:
-            // if the server tries to send a message to the device, it will get
-            // a "NotRegistered" error message and should unregister the device.
-            String message = context.getString(R.string.server_unregister_error,e.getMessage());
-            Log.i("DEBUG",message);
-        }
+        return false;
     }
 
     /**
@@ -104,7 +78,7 @@ public final class ServerUtilities {
      * @throws java.io.IOException propagated from POST.
      */
     private static void post(String endpoint, Map<String, String> params) throws IOException {
-        Log.i(CommonData.TAG,"Executing POST in server Utilities");
+        Log.i(TAG,"Executing POST in server Utilities");
         URL url;
         try {
             url = new URL(endpoint);
@@ -123,11 +97,11 @@ public final class ServerUtilities {
             }
         }
         String body = bodyBuilder.toString();
-        Log.v(CommonData.TAG, "Posting '" + body + "' to " + url);
+        Log.v(TAG, "Posting '" + body + "' to " + url);
         byte[] bytes = body.getBytes();
         HttpURLConnection conn = null;
         try {
-            Log.e("URL", "> " + url);
+            Log.i("Server URL", "> " + url);
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setUseCaches(false);
@@ -141,10 +115,10 @@ public final class ServerUtilities {
             out.close();
             // handle the response
             int status = conn.getResponseCode();
-            Log.i("DEBUG", "response code" + Integer.toString(status));
+            Log.i(TAG, "response code" + Integer.toString(status));
 
             if (status != 200) {
-                Log.i(CommonData.TAG,"Post failed with error code " + status);
+                Log.i(TAG,"Post failed with error code " + status);
                 throw new IOException("Post failed with error code " + status);
             }
         }
