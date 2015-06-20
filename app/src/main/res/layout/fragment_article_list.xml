@@ -11,6 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#ffffff"
+        android:weightSum="1">
     <ListView
         android:id="@+id/listViewArticle"
         android:layout_width="match_parent"
@@ -21,6 +27,15 @@
         android:drawSelectorOnTop="true"
         android:transcriptMode="alwaysScroll"
         android:layout_gravity="center"
+        android:layout_weight="0.95"
         android:dividerHeight="3dp" />
 
+        <ImageView
+            android:id="@+id/imageViewAdvertisement"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.05"
+            android:src="@drawable/advertisement"
+            android:contentDescription="@string/advertisement" />
+    </LinearLayout>
 </RelativeLayout>

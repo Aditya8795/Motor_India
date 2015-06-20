@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.ServerInteraction.Retrivejson;
 import in.motorindiaonline.motorindia.Utilities.AlertDialogManager;
-import in.motorindiaonline.motorindia.Utilities.CommonUtilities;
+import in.motorindiaonline.motorindia.Utilities.CommonData;
 import in.motorindiaonline.motorindia.Utilities.ConnectionDetector;
 
 public class ArticleList extends ActionBarActivity
@@ -111,14 +111,14 @@ public class ArticleList extends ActionBarActivity
                     .setMessage("Please connect to working Internet connection")
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i(CommonUtilities.TAG,"ok has been clicked");
+                            Log.i(CommonData.TAG,"ok has been clicked");
                             Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
                             startActivity(i);
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i(CommonUtilities.TAG,"Cancel has been clicked");
+                            Log.i(CommonData.TAG,"Cancel has been clicked");
                             finish();
                         }
                     })
@@ -202,7 +202,7 @@ public class ArticleList extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Just call restoreActionBar, as we do list updation there
+            // Just call restoreActionBar, as we do list update there
             restoreActionBar();
             return true;
         }
@@ -245,14 +245,14 @@ public class ArticleList extends ActionBarActivity
                     .setMessage("Please connect to working Internet connection")
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i(CommonUtilities.TAG, "ok has been clicked");
+                            Log.i(CommonData.TAG, "ok has been clicked");
                             Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
                             startActivity(i);
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i(CommonUtilities.TAG,"Cancel has been clicked");
+                            Log.i(CommonData.TAG,"Cancel has been clicked");
                             finish();
                         }
                     })
@@ -365,9 +365,9 @@ public class ArticleList extends ActionBarActivity
 
                     // lets handle the click send the id to Displayarticle activity where the article with ID = 'idList.get(position)' will br displayed
                     Intent intent = new Intent(ArticleList.this,DisplayArticle.class);
-                    intent.putExtra(CommonUtilities.EXTRA_MESSAGE, idList.get(position));
-                    intent.putExtra(CommonUtilities.EXTRA_URL, imgUrlList.get(position));
-                    intent.putExtra(CommonUtilities.EXTRA_TITLE, list_titles.get(position));
+                    intent.putExtra(CommonData.EXTRA_MESSAGE, idList.get(position));
+                    intent.putExtra(CommonData.EXTRA_URL, imgUrlList.get(position));
+                    intent.putExtra(CommonData.EXTRA_TITLE, list_titles.get(position));
                     startActivity(intent);
                 }
             });
@@ -457,14 +457,14 @@ public class ArticleList extends ActionBarActivity
                     .setMessage("Please connect to working Internet connection")
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i(CommonUtilities.TAG,"ok has been clicked");
+                            Log.i(CommonData.TAG,"ok has been clicked");
                             Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
                             startActivity(i);
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i(CommonUtilities.TAG,"Cancel has been clicked");
+                            Log.i(CommonData.TAG,"Cancel has been clicked");
                             finish();
                         }
                     })

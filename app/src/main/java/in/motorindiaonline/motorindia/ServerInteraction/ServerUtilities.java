@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import in.motorindiaonline.motorindia.R;
-import in.motorindiaonline.motorindia.Utilities.CommonUtilities;
+import in.motorindiaonline.motorindia.Utilities.CommonData;
 
 public final class ServerUtilities {
 
@@ -29,9 +29,9 @@ public final class ServerUtilities {
      *
      */
     public static void register(final Context context, String name, String email, final String regId) {
-        Log.i(CommonUtilities.TAG,"sending data ie registering with our own server");
-        Log.i(CommonUtilities.TAG, "registering device (regId = " + regId + ")");
-        String serverUrl = CommonUtilities.SERVER_URL+"gcm_server_php/register.php";
+        Log.i(CommonData.TAG,"sending data ie registering with our own server");
+        Log.i(CommonData.TAG, "registering device (regId = " + regId + ")");
+        String serverUrl = CommonData.SERVER_URL+"gcm_server_php/register.php";
         Map<String, String> params = new HashMap<>();
         params.put("regId", regId);
         params.put("name", name);
@@ -42,26 +42,26 @@ public final class ServerUtilities {
         // As the server might be down, we will retry it a couple
         // times.
         for (int i = 1; i <= MAX_ATTEMPTS; i++) {
-            Log.d(CommonUtilities.TAG, "Attempt #" + i + " to register");
+            Log.d(CommonData.TAG, "Attempt #" + i + " to register");
             try {
                 post(serverUrl, params);
                 GCMRegistrar.setRegisteredOnServer(context, true);
-                CommonUtilities.displayMessage(context, "We have completed GCM registration");
+                Log.i("DEBUG","it is registered on server");
                 return;
             } catch (IOException e) {
                 // Here we are simplifying and retrying on any error; in a real
                 // application, it should retry only on unrecoverable errors
                 // (like HTTP error code 503).
-                Log.e(CommonUtilities.TAG, "Failed to register on attempt " + i + ":" + e);
+                Log.e(CommonData.TAG, "Failed to register on attempt " + i + ":" + e);
                 if (i == MAX_ATTEMPTS) {
                     break;
                 }
                 try {
-                    Log.d(CommonUtilities.TAG, "Sleeping for " + backoff + " ms before retry");
+                    Log.d(CommonData.TAG, "Sleeping for " + backoff + " ms before retry");
                     Thread.sleep(backoff);
                 } catch (InterruptedException e1) {
                     // Activity finished before we complete - exit.
-                    Log.d(CommonUtilities.TAG, "Thread interrupted: abort remaining retries!");
+                    Log.d(CommonData.TAG, "Thread interrupted: abort remaining retries!");
                     Thread.currentThread().interrupt();
                     return;
                 }
@@ -78,7 +78,7 @@ public final class ServerUtilities {
 
         Log.i("", "going to unregister device (regId = " + regId + ")");
         //TODO IMPLEMENT UNREGISTER of the users
-        String serverUrl = CommonUtilities.SERVER_URL + "/unregister";
+        String serverUrl = CommonData.SERVER_URL + "/unregister";
         Map<String, String> params = new HashMap<>();
         params.put("regId", regId);
         try {
@@ -91,7 +91,7 @@ public final class ServerUtilities {
             // if the server tries to send a message to the device, it will get
             // a "NotRegistered" error message and should unregister the device.
             String message = context.getString(R.string.server_unregister_error,e.getMessage());
-            CommonUtilities.displayMessage(context, message);
+            Log.i("DEBUG",message);
         }
     }
 
@@ -104,7 +104,7 @@ public final class ServerUtilities {
      * @throws java.io.IOException propagated from POST.
      */
     private static void post(String endpoint, Map<String, String> params) throws IOException {
-        Log.i(CommonUtilities.TAG,"Executing POST in server Utilities");
+        Log.i(CommonData.TAG,"Executing POST in server Utilities");
         URL url;
         try {
             url = new URL(endpoint);
@@ -123,7 +123,7 @@ public final class ServerUtilities {
             }
         }
         String body = bodyBuilder.toString();
-        Log.v(CommonUtilities.TAG, "Posting '" + body + "' to " + url);
+        Log.v(CommonData.TAG, "Posting '" + body + "' to " + url);
         byte[] bytes = body.getBytes();
         HttpURLConnection conn = null;
         try {
@@ -144,7 +144,7 @@ public final class ServerUtilities {
             Log.i("DEBUG", "response code" + Integer.toString(status));
 
             if (status != 200) {
-                Log.i(CommonUtilities.TAG,"Post failed with error code " + status);
+                Log.i(CommonData.TAG,"Post failed with error code " + status);
                 throw new IOException("Post failed with error code " + status);
             }
         }
