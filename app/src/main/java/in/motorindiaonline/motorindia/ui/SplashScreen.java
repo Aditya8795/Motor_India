@@ -9,6 +9,7 @@ import android.util.Log;
 
 import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.Utilities.CommonData;
+import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
 
 
 public class SplashScreen extends ActionBarActivity {
@@ -28,10 +29,8 @@ public class SplashScreen extends ActionBarActivity {
         //getSupportActionBar().setCustomView(R.layout.actionbar_layout);
         //getSupportActionBar().setIcon(R.drawable.icon_tentative);
 
-
-        // Get the status of registration from system memory
-        SharedPreferences prefs = getSharedPreferences(CommonData.GENERAL_DATA, MODE_PRIVATE);
-        final Boolean GCMRegistered = prefs.getBoolean(CommonData.GCM_REGISTRATION_STATUS, false);
+        SharedPreferences prefs = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE);
+        final Boolean GCMRegistered = prefs.getBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, false);
 
         // wait for SPLASH_SCREEN_DELAY milliseconds then launch the intent depending on registration status
         final Handler handler = new Handler();

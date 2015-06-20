@@ -21,23 +21,10 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.Utilities.AlertDialogManager;
-import in.motorindiaonline.motorindia.Utilities.CommonData;
 import in.motorindiaonline.motorindia.Utilities.ConnectionDetector;
 import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
 import in.motorindiaonline.motorindia.gcm.RegistrationIntentService;
 
-/*
-Server API key:
-AIzaSyCsKwKuuLBbq-0CEZSC5wmJDyXpDHqRWU0
-Sender ID:
-544864356150
-
-Lets start the party!
-
-GCM requires devices running Android 2.2 or higher that also have the Google Play Store application
-installed, or an emulator running Android 2.2 with Google APIs.
-
- */
 public class GCMData extends ActionBarActivity {
 
     private static final String TAG = "GCM Data collection";
@@ -55,8 +42,8 @@ public class GCMData extends ActionBarActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i(TAG,"BroadcastReceiver onReceive called");
-                SharedPreferences prefs = getSharedPreferences(CommonData.GENERAL_DATA, MODE_PRIVATE);
-                final Boolean TokenSentToServer = prefs.getBoolean(CommonData.TOKEN_WENT_TO_SERVER, false);
+                SharedPreferences prefs = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE);
+                final Boolean TokenSentToServer = prefs.getBoolean(MotorIndiaPreferences.TOKEN_WENT_TO_SERVER, false);
                 if (TokenSentToServer) {
                    Log.i(TAG, getString(R.string.gcm_send_message));
                 } else {
@@ -124,10 +111,10 @@ public class GCMData extends ActionBarActivity {
             Log.i(TAG, "User has actually submitted some data");
 
             // Store the name and email into AppData
-            SharedPreferences.Editor editor = getSharedPreferences(CommonData.GENERAL_DATA, MODE_PRIVATE).edit();
-            editor.putString(CommonData.USER_NAME, name);
-            editor.putString(CommonData.USER_EMAIL, eMail);
-            editor.putBoolean(CommonData.SEND_NOTIFICATIONS, sendNotification);
+            SharedPreferences.Editor editor = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE).edit();
+            editor.putString(MotorIndiaPreferences.USER_NAME, name);
+            editor.putString(MotorIndiaPreferences.USER_EMAIL, eMail);
+            editor.putBoolean(MotorIndiaPreferences.SEND_NOTIFICATIONS, sendNotification);
             editor.apply();
 
             Log.i(TAG, " Saved DATA to App memory");

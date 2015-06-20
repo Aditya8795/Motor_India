@@ -23,7 +23,6 @@ import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
 
-import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.ServerInteraction.ServerUtilities;
 import in.motorindiaonline.motorindia.Utilities.CommonData;
 import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
@@ -67,7 +66,7 @@ public class RegistrationIntentService extends IntentService {
                 // are local.
                 // [START get_token]
                 InstanceID instanceID = InstanceID.getInstance(this);
-                String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+                String token = instanceID.getToken(CommonData.SENDER_ID,
                         GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
                 // [END get_token]
                 Log.i(TAG, "GCM Registration Token: " + token);
@@ -110,7 +109,7 @@ public class RegistrationIntentService extends IntentService {
         // Add custom implementation, as needed.
         //TODO code goes here :p
         // REMEMBER ABOUT boolean sentToken = sharedPreferences.getBoolean(MotorIndiaPreferences.SENT_TOKEN_TO_SERVER, false);
-        Log.i(CommonData.TAG,"Going to register the device with google server");
+        Log.i(TAG,"Going to register the device with google server");
         final Context context = this;
         ServerUtilities.register(context,name, email, token);
     }
