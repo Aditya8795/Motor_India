@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmPubSub;
@@ -55,7 +54,6 @@ public class RegistrationIntentService extends IntentService {
                 /*
                     A sender ID is a project number acquired from the API console, as described in Getting Started.
                     I have NO CLUE (maybe just that its some sort of ah no idea) TODO what is GoogleCloudMessaging.INSTANCE_ID_SCOPE
-
                 */
                 // fetch the data passed through the intent as extras
                 String name = intent.getStringExtra("NAME");
@@ -82,19 +80,15 @@ public class RegistrationIntentService extends IntentService {
                 // You should store a boolean that indicates whether the generated token has been
                 // sent to your server. If the boolean is false, send the token to your server,
                 // otherwise your server should have already received the token.
-                sharedPreferences.edit().putBoolean(MotorIndiaPreferences.SENT_TOKEN_TO_SERVER, true).apply();
+                sharedPreferences.edit().putBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, true).apply();
                 // [END register_for_gcm]
             }
         } catch (Exception e) {
             Log.d(TAG, "Failed to complete token refresh", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
-            sharedPreferences.edit().putBoolean(MotorIndiaPreferences.SENT_TOKEN_TO_SERVER, false).apply();
+            sharedPreferences.edit().putBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, false).apply();
         }
-
-        // Notify UI that registration has completed, so the progress indicator can be hidden.
-        Intent registrationComplete = new Intent(MotorIndiaPreferences.REGISTRATION_COMPLETE);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
     /**
@@ -106,9 +100,7 @@ public class RegistrationIntentService extends IntentService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token,String name, String email) {
-        // Add custom implementation, as needed.
-        //TODO code goes here :p
-        // REMEMBER ABOUT boolean sentToken = sharedPreferences.getBoolean(MotorIndiaPreferences.SENT_TOKEN_TO_SERVER, false);
+        //TODO REMEMBER ABOUT boolean sentToken = sharedPreferences.getBoolean(MotorIndiaPreferences.SENT_TOKEN_TO_SERVER, false);
         Log.i(TAG,"Going to register the device with google server");
         final Context context = this;
         ServerUtilities.register(context,name, email, token);

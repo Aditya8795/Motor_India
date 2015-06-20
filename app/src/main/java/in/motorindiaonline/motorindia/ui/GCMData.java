@@ -1,15 +1,11 @@
 package in.motorindiaonline.motorindia.ui;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
@@ -30,27 +26,10 @@ public class GCMData extends ActionBarActivity {
     private static final String TAG = "GCM Data collection";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gcmregister);
-        Log.i(TAG, "OnCreate");
-        // This just SETS a broadcastReceiver in order to wait to RECEIVE the registration token
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.i(TAG,"BroadcastReceiver onReceive called");
-                SharedPreferences prefs = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE);
-                final Boolean TokenSentToServer = prefs.getBoolean(MotorIndiaPreferences.TOKEN_WENT_TO_SERVER, false);
-                if (TokenSentToServer) {
-                   Log.i(TAG, getString(R.string.gcm_send_message));
-                } else {
-                    Log.i(TAG, getString(R.string.token_error_message));
-                }
-            }
-        };
 
         Log.i(TAG,"checking connection");
         ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
@@ -78,23 +57,6 @@ public class GCMData extends ActionBarActivity {
                     .setCancelable(false)
                     .show();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        // we reset the broadcastReceiver
-        super.onResume();
-        Log.i(TAG, " set BroadcastReceiver");
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(MotorIndiaPreferences.REGISTRATION_COMPLETE));
-    }
-
-    @Override
-    protected void onPause() {
-        Log.i(TAG," unset BroadcastReceiver");
-        // we UNSET the broadcastReceiver we set
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-        super.onPause();
     }
 
     public void SubmitRegistrationDetails(View view) {
