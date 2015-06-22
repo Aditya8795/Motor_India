@@ -1,14 +1,18 @@
 package in.motorindiaonline.motorindia.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import in.motorindiaonline.motorindia.R;
 import in.motorindiaonline.motorindia.Utilities.CommonData;
+import in.motorindiaonline.motorindia.Utilities.ConnectionDetector;
 import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
 
 
@@ -51,5 +55,33 @@ public class SplashScreen extends ActionBarActivity {
                 }
             }
         }, CommonData.SPLASH_SCREEN_DELAY);
+
+        Log.i(TAG,"checking connection");
+        ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
+        // Check if Internet present
+        if (!connectionDetector.isConnectedInternet()) {
+            // Internet Connection is not present, I make a special alert to get the user to access internet
+            // Here as I need the dialog to be a inner class to send the intent and call finish
+            new AlertDialog.Builder(this)
+                    .setTitle("Internet Connection Error")
+                    .setMessage("Please connect to working Internet connection")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "ok has been clicked");
+                            Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "Cancel has been clicked");
+                            finish();
+                        }
+                    })
+                    .setIcon(R.drawable.alert)
+                    .setCancelable(false)
+                    .show();
+        }
     }
+
 }
