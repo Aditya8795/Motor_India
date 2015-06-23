@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_weight="0.05"
-            android:src="@drawable/advertisement"
+            android:src="@drawable/advt"
             android:contentDescription="@string/advertisement" />
     </LinearLayout>
 </RelativeLayout>

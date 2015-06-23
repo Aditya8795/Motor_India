@@ -43,7 +43,7 @@ public class SplashScreen extends ActionBarActivity {
             public void run() {
                 if(GCMRegistered){
                     Log.i(TAG, "GCM is registered, going to HOME activity");
-                    Intent myIntent = new Intent(SplashScreen.this, ArticleList.class);
+                    Intent myIntent = new Intent(SplashScreen.this, MainMenu.class);
                     myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     SplashScreen.this.startActivity(myIntent);
                 }
@@ -55,7 +55,11 @@ public class SplashScreen extends ActionBarActivity {
                 }
             }
         }, CommonData.SPLASH_SCREEN_DELAY);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         Log.i(TAG,"checking connection");
         ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
         // Check if Internet present
@@ -82,6 +86,9 @@ public class SplashScreen extends ActionBarActivity {
                     .setCancelable(false)
                     .show();
         }
+        Log.i(TAG,"finished checking");
     }
+
+
 
 }

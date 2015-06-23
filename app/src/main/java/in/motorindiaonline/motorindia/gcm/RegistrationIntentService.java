@@ -20,7 +20,7 @@ import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
 
-import in.motorindiaonline.motorindia.ServerInteraction.ServerUtilities;
+import in.motorindiaonline.motorindia.ServerInteraction.GCMServerUtilities;
 import in.motorindiaonline.motorindia.Utilities.CommonData;
 import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
 
@@ -102,7 +102,7 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token,String name, String email) {
         Log.i(TAG,"Going to register the device with OUR server");
-        if(ServerUtilities.register(name, email, token)){
+        if(GCMServerUtilities.register(name, email, token)){
             SharedPreferences.Editor editor = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE).edit();
             editor.putBoolean(MotorIndiaPreferences.SENT_TOKEN_TO_SERVER, true).apply();
             Log.i(TAG, "it is registered on server");

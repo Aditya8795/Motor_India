@@ -12,4 +12,5 @@ public class MotorIndiaPreferences {
     public static final String SEND_NOTIFICATIONS = "com.spider.motorindia.SEND_NOTIFICATIONS";
     public static final String USER_NAME = "com.spider.motorindia.USER_NAME";
     public static final String USER_EMAIL = "com.spider.motorindia.USER_EMAIL";
+    public static final String CATEGORY_NUMBER = "com.spider.motorindia.CATEGORY_NUMBER";
 }

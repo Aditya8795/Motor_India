@@ -14,7 +14,7 @@ import java.util.Random;
 
 import in.motorindiaonline.motorindia.Utilities.CommonData;
 
-public final class ServerUtilities {
+public final class GCMServerUtilities {
 
     private static final String TAG = "Register with server";
 

@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,12 +25,15 @@ import android.widget.Toast;
 
 import in.motorindiaonline.motorindia.R;
 
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
+
+    public static final String TAG = "NavDrawerFragment";
 
     /**
      * Remember the position of the selected item.
@@ -92,14 +96,14 @@ public class NavigationDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
+                R.layout.fragment_navigation_drawer_categories, container, false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
             }
         });
-        // TODO ADD to this to change navigation drawer categories
+        // TODO add categories here
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
@@ -123,6 +127,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section16),
                         getString(R.string.title_section17),
                         getString(R.string.title_section18),
+                        getString(R.string.title_section19),
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -207,6 +212,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void selectItem(int position) {
+        Log.i(TAG,"you have clicked at "+Integer.toString(position));
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
@@ -266,7 +272,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Settings - Coming SOON", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -297,4 +303,5 @@ public class NavigationDrawerFragment extends Fragment {
          */
         void onNavigationDrawerItemSelected(int position);
     }
+
 }

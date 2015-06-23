@@ -67,7 +67,7 @@ public class GCMData extends ActionBarActivity {
                 alert.showAlertDialog(this,"ERROR","Install PlayServices",Boolean.FALSE);
             }
         }
-        Intent myIntent = new Intent(GCMData.this, ArticleList.class);
+        Intent myIntent = new Intent(GCMData.this, MainMenu.class);
         // so that the user cant go back to splash screen and registration screen
         myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         GCMData.this.startActivity(myIntent);

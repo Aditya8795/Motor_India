@@ -14,4 +14,6 @@ Sender ID:
     public static final String SENDER_ID = "550448643561";
     // Amount of time (in milliseconds) that the splash screen should be shown
     public static final int SPLASH_SCREEN_DELAY = 1500;
+    // give your site URL
+    public static final String SITE_URL ="http://www.motorindiaonline.in";
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories">
+        <item>Featured Articles</item>
+        <item>Trucks</item>
+        <item>Buses</item>
+        <item>Construction Equipment</item>
+        <item>Applications</item>
+        <item>Components</item>
+        <item>Aftermarket</item>
+        <item>Tyres</item>
+        <item>Lubes &amp; Fuels</item>
+        <item>Batteries</item>
+        <item>Technology</item>
+        <item>Logistics</item>
+        <item>Dealer Corner</item>
+        <item>Bazaar Talk</item>
+        <item>CSR Initiative</item>
+        <item>Events</item>
+        <item>Impact Feature</item>
+        <item>Catalogs/Brochures</item>
+        <item>Subscribe</item>
+    </string-array>
+</resources>

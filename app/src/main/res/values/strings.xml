@@ -6,6 +6,7 @@
     <string name="splashScreenImageDescription">This is the splash screen Image</string>
     <string name="title_activity_article_list">MotorIndia</string>
 
+
     <string name="title_section1">Featured Articles</string>
     <string name="title_section2">Trucks</string>
     <string name="title_section3">Buses</string>
@@ -19,11 +20,14 @@
     <string name="title_section11">Technology</string>
     <string name="title_section12">Logistics</string>
     <string name="title_section13">Dealer Corner</string>
-    <string name="title_section14">Impact Feature</string>
-    <string name="title_section15">Events</string>
-    <string name="title_section16">Subscribe</string>
-    <string name="title_section17">Catalogs &amp; Brochures</string>
-    <string name="title_section18">Coming Soon</string>
+    <string name="title_section14">Bazaar Talk</string>
+    <string name="title_section15">CSR Initiative</string>
+    <string name="title_section16">Events</string>
+
+    <string name="title_section17">Impact Feature</string>
+
+    <string name="title_section18">Catalogs/Brochures</string>
+    <string name="title_section19">Subscribe</string>
 
     <string name="gcm_send_message">Token retrieved and sent to server! You can now use gcmsender to
         send downstream messages to this app.</string>
@@ -47,4 +51,5 @@
     <string name="row_image_description">The image corresponding to the Article Title</string>
     <string name="title_activity_display_article">DisplayArticle</string>
     <string name="advertisement">Advertisement shown at the bottom</string>
+    <string name="title_activity_main_menu">Motor India</string>
 </resources>
