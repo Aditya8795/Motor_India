@@ -28,7 +28,7 @@
         android:transcriptMode="alwaysScroll"
         android:layout_gravity="center"
         android:layout_weight="0.95"
-        android:dividerHeight="3dp" />
+        android:dividerHeight="3dip" />
 
         <ImageView
             android:id="@+id/imageViewAdvertisement"

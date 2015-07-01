@@ -28,13 +28,13 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import in.motorindiaonline.motorindia.R;
-import in.motorindiaonline.motorindia.ServerInteraction.Retrivejson;
+import in.motorindiaonline.motorindia.ServerInteraction.RetrieveJSON;
 import in.motorindiaonline.motorindia.Utilities.AlertDialogManager;
 import in.motorindiaonline.motorindia.Utilities.ConnectionDetector;
 import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
 
 public class ArticleList extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, Retrivejson.MyCallbackInterface {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, RetrieveJSON.MyCallbackInterface {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -492,7 +492,7 @@ public class ArticleList extends ActionBarActivity
 
         //String link = "http://motorindiaonline.in/mobapp/?s_i="+Integer.toString(till-NO_TITLES)+"&e_i="+Integer.toString(till)+"&cat_i="+cat;
         String link = "http://motorindiaonline.in/mobapp/?s_i=1&e_i=15&cat_i=Trucks";
-        new Retrivejson(this).execute(link);
+        new RetrieveJSON(this).execute(link);
     }
 
     @Override

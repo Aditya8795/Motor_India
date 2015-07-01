@@ -1,14 +1,20 @@
 package in.motorindiaonline.motorindia.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,13 +22,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import in.motorindiaonline.motorindia.R;
+import in.motorindiaonline.motorindia.ServerInteraction.RetrieveJSON;
 import in.motorindiaonline.motorindia.Utilities.CommonData;
+import in.motorindiaonline.motorindia.Utilities.ConnectionDetector;
 import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
 
 public class MainMenu extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,RetrieveJSON.MyCallbackInterface {
 
     String url = CommonData.SITE_URL;
 
@@ -64,6 +77,7 @@ public class MainMenu extends ActionBarActivity
 
         //TODO never hardcode
         if(position == 17 || position == 18){
+            // set the URL to which the user is sent to when he clicks on the image
             if(position == 17){
                 url = "http://www.motorindiaonline.in/catalogs-brochures/";
             }
@@ -85,6 +99,65 @@ public class MainMenu extends ActionBarActivity
                     .commit();
             return;
         }
+        String link = "http://motorindiaonline.in/mobapp/?s_i=1&e_i=10&cat_i=";
+
+        // Start fetching content for the list
+        switch (position){
+            case 0:
+                link = link +"featured";
+                break;
+            case 1:
+                link = link +"trucks";
+                break;
+            case 2:
+                link = link +"buses";
+                break;
+            case 3:
+                link = link +"construction-equipment";
+                break;
+            case 4:
+                link = link +"applications";
+                break;
+            case 5:
+                link = link +"component";
+                break;
+            case 6:
+                link = link +"aftermarket";
+                break;
+            case 7:
+                link = link +"tyres";
+                break;
+            case 8:
+                link = link +"lubes-fuels";
+                break;
+            case 9:
+                link = link +"batteries";
+                break;
+            case 10:
+                link = link +"technology";
+                break;
+            case 11:
+                link = link +"logistics";
+                break;
+            case 12:
+                link = link +"dealer-corner";
+                break;
+            case 13:
+                link = link +"bazaar-talk";
+                break;
+            case 14:
+                link = link +"csr-initiative-2";
+                break;
+            case 15:
+                link = link +"events";
+                break;
+            case 16:
+                link = link +"impact-feature";
+                break;
+        }
+
+        // Start a thread to go fetch article data
+        new RetrieveJSON(this).execute(link);
 
         // Create a new fragment and replace container
         Fragment fragment = new LoadingFragment();
@@ -208,8 +281,176 @@ public class MainMenu extends ActionBarActivity
         startActivity(i);
     }
 
+    // This function is called if somehow a request for the article list fails. this fixes the bug
+    // of the user stuck at loading.
+    public void requestAgain(){
+        //Check if this is due to internet problem
+        Log.i(TAG, "checking connection");
+        ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
+
+        // Check if Internet present
+        if (!connectionDetector.isConnectedInternet()) {
+            //Stop progressBar
+            SplashScreen.mProgressBar.setVisibility(ProgressBar.GONE);
+
+            // Internet Connection is not present, I make a special alert to get the user to access internet
+            // Here as I need the dialog to be a inner class to send the intent and call finish
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Internet Connection Error")
+                    .setMessage("Please connect to working Internet connection")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "ok has been clicked");
+                            Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "Cancel has been clicked");
+                            finish();
+                        }
+                    })
+                    .setIcon(R.drawable.alert)
+                    .setCancelable(false)
+                    .show();
+            return;
+        }
+        Log.i(TAG, "finished checking");
+
+        int position = 0;
+        Log.i(TAG,"Requesting AGAIN for article list");
+        if(mTitle == getString(R.string.title_section1)){
+            position = 0;
+        } else if(mTitle == getString(R.string.title_section2)){
+            position = 1;
+        } else if(mTitle == getString(R.string.title_section3)){
+            position = 2;
+        } else if(mTitle == getString(R.string.title_section4)){
+            position = 3;
+        } else if(mTitle == getString(R.string.title_section5)){
+            position = 4;
+        } else if(mTitle == getString(R.string.title_section6)){
+            position = 5;
+        } else if(mTitle == getString(R.string.title_section7)){
+            position = 6;
+        } else if(mTitle == getString(R.string.title_section8)){
+            position = 7;
+        } else if(mTitle == getString(R.string.title_section9)){
+            position = 8;
+        } else if(mTitle == getString(R.string.title_section10)){
+            position = 9;
+        } else if(mTitle == getString(R.string.title_section11)){
+            position = 10;
+        } else if(mTitle == getString(R.string.title_section12)){
+            position = 11;
+        } else if(mTitle == getString(R.string.title_section13)){
+            position = 12;
+        } else if(mTitle == getString(R.string.title_section14)){
+            position = 13;
+        } else if(mTitle == getString(R.string.title_section15)){
+            position = 14;
+        } else if(mTitle == getString(R.string.title_section16)){
+            position = 15;
+        } else if(mTitle == getString(R.string.title_section17)){
+            position = 16;
+        }
+
+        String link = "http://motorindiaonline.in/mobapp/?s_i=1&e_i=10&cat_i=";
+
+        switch (position){
+            case 0:
+                link = link +"featured";
+                break;
+            case 1:
+                link = link +"trucks";
+                break;
+            case 2:
+                link = link +"buses";
+                break;
+            case 3:
+                link = link +"construction-equipment";
+                break;
+            case 4:
+                link = link +"applications";
+                break;
+            case 5:
+                link = link +"component";
+                break;
+            case 6:
+                link = link +"aftermarket";
+                break;
+            case 7:
+                link = link +"tyres";
+                break;
+            case 8:
+                link = link +"lubes-fuels";
+                break;
+            case 9:
+                link = link +"batteries";
+                break;
+            case 10:
+                link = link +"technology";
+                break;
+            case 11:
+                link = link +"logistics";
+                break;
+            case 12:
+                link = link +"dealer-corner";
+                break;
+            case 13:
+                link = link +"bazaar-talk";
+                break;
+            case 14:
+                link = link +"csr-initiative-2";
+                break;
+            case 15:
+                link = link +"events";
+                break;
+            case 16:
+                link = link +"impact-feature";
+                break;
+        }
+
+        // Start a thread again to go fetch article data
+        new RetrieveJSON(this).execute(link);
+    }
+
+    @Override
+    public void onRequestCompleted(JSONArray result) {
+        if(result == null){
+            Log.i(TAG,"Thread returned NULL");
+            // This could mean that the user is waiting for the article to load, so we need to request again
+            requestAgain();
+            return;
+        }
+        try {
+            String url = result.getJSONObject(result.length()-1).getString(MotorIndiaPreferences.URL_JSON);
+            Log.i(TAG,"We have received result of the request to the URL = "+url);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Now depending on what the current screen is using mTitle we can know that
+        // we need to set the data into the article fragment
+        Log.i(TAG,"Replacing the existing fragment ");
+        // Create a new fragment and replace container
+        Fragment fragment = new ArticleFragment();
+        Bundle args = new Bundle();
+        String articleData = result.toString();
+        args.putString(MotorIndiaPreferences.ARTICLE_DATA, articleData);
+        fragment.setArguments(args);
+
+        // Insert the fragment by replacing any existing fragment AND allowStateLoss -
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .commitAllowingStateLoss();
+    }
+
+
     /**
-     * A placeholder fragment containing a simple view.
+     * A placeholder fragment containing a simple view. used in the naviagtion drawer
      */
     public static class PlaceholderFragment extends Fragment {
         /**
@@ -254,6 +495,24 @@ public class MainMenu extends ActionBarActivity
      */
     public static class ArticleFragment extends Fragment {
 
+        private static final String TAG = "ArticleFragmentRecycler";
+        // Used to represent a fixed set of constants
+        private enum LayoutManagerType {
+            GRID_LAYOUT_MANAGER,
+            LINEAR_LAYOUT_MANAGER
+        }
+
+
+        protected LayoutManagerType mCurrentLayoutManagerType;
+        protected RadioButton mLinearLayoutRadioButton;
+        protected RadioButton mGridLayoutRadioButton;
+        protected RecyclerView mRecyclerView;
+        protected CustomAdapter mAdapter;
+        protected RecyclerView.LayoutManager mLayoutManager;
+        protected String[] mDataset;
+
+        private static int SPAN_COUNT = 1;
+
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -269,11 +528,51 @@ public class MainMenu extends ActionBarActivity
         public ArticleFragment() {
         }
 
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            // To ensure that the articles are such that a single column if portrait
+            int rotation = getResources().getConfiguration().orientation;
+            if(rotation == 1){
+                // now let there be 1 column for portrait
+                SPAN_COUNT = 1;
+            }
+            else if(rotation == 2){
+                // 2 columns for landscape
+                SPAN_COUNT = 2;
+            }
 
             View rootView = inflater.inflate(R.layout.fragment_articlelist, container, false);
+            Log.i(TAG, "onCreate view was called with args" + getArguments().getString(MotorIndiaPreferences.ARTICLE_DATA));
+
+            // store the articleList data
+            mDataset = new String[1];
+            mDataset[0] = getArguments().getString(MotorIndiaPreferences.ARTICLE_DATA);
+
+            // setTag - It's basically a way for views to have memories.
+            rootView.setTag(TAG);
+
+            mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+
+            // LinearLayoutManager is used here, this will layout the elements in a similar fashion
+            // to the way ListView would layout elements. The RecyclerView.LayoutManager defines how
+            // elements are laid out.
+            mLayoutManager = new LinearLayoutManager(getActivity());
+
+            mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+
+            if (savedInstanceState != null) {
+                // Restore saved layout manager type.
+                mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
+                        .getSerializable(MotorIndiaPreferences.KEY_LAYOUT_MANAGER);
+            }
+            setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+
+            mAdapter = new CustomAdapter(mDataset);
+            // Set CustomAdapter as the adapter for RecyclerView.
+            mRecyclerView.setAdapter(mAdapter);
+
             return rootView;
         }
 
@@ -283,12 +582,53 @@ public class MainMenu extends ActionBarActivity
             ((MainMenu) activity).onSectionAttached(
                     getArguments().getInt(MotorIndiaPreferences.CATEGORY_NUMBER));
         }
+
+        /**
+         * Set RecyclerView's LayoutManager to the one given.
+         *
+         * @param layoutManagerType Type of layout manager to switch to.
+         */
+        public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
+            int scrollPosition = 0;
+
+            // If a layout manager has already been set, get current scroll position.
+            if (mRecyclerView.getLayoutManager() != null) {
+                scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition();
+            }
+
+            switch (layoutManagerType) {
+                case GRID_LAYOUT_MANAGER:
+                    mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
+                    mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+                    break;
+                case LINEAR_LAYOUT_MANAGER:
+                    mLayoutManager = new LinearLayoutManager(getActivity());
+                    mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                    break;
+                default:
+                    mLayoutManager = new LinearLayoutManager(getActivity());
+                    mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+            }
+
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.scrollToPosition(scrollPosition);
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle savedInstanceState) {
+            // Save currently selected layout manager.
+            savedInstanceState.putSerializable(MotorIndiaPreferences.KEY_LAYOUT_MANAGER, mCurrentLayoutManagerType);
+            super.onSaveInstanceState(savedInstanceState);
+        }
     }
 
     /**
-     *  The fragment to hold Articles
+     *  The fragment to hold a single Image which on clicking directs you to a appropriate website
      */
     public static class ImageFragment extends Fragment {
+
+        private static final String TAG = "ImageFragment";
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -303,6 +643,7 @@ public class MainMenu extends ActionBarActivity
         }
 
         public ImageFragment() {
+            Log.i(TAG," Image Fragment Constructor called");
         }
 
         @Override
@@ -312,6 +653,7 @@ public class MainMenu extends ActionBarActivity
 
             Integer position = getArguments().getInt(MotorIndiaPreferences.CATEGORY_NUMBER);
             ImageView img = (ImageView)rootView.findViewById(R.id.imageView);
+
             // TODO never hardcode
             if(position == 17){
                 Log.i(TAG,"Setting catalog picture");
@@ -356,6 +698,7 @@ public class MainMenu extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
             View rootView = inflater.inflate(R.layout.fragment_loading, container, false);
             return rootView;
         }

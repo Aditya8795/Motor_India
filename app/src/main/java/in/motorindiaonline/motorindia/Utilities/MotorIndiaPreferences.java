@@ -13,4 +13,7 @@ public class MotorIndiaPreferences {
     public static final String USER_NAME = "com.spider.motorindia.USER_NAME";
     public static final String USER_EMAIL = "com.spider.motorindia.USER_EMAIL";
     public static final String CATEGORY_NUMBER = "com.spider.motorindia.CATEGORY_NUMBER";
+    public static final String  URL_JSON = "com.spider.motorindia.URL_JSON";
+    public static final String  ARTICLE_DATA = "com.spider.motorindia.ARTICLE_DATA";
+    public static final String  KEY_LAYOUT_MANAGER = "com.spider.motorindia.KEY_LAYOUT_MANAGER";
 }

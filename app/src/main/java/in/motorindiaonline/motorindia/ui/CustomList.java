@@ -31,7 +31,7 @@ public class CustomList extends ArrayAdapter<String> {
         LayoutInflater inflater = context.getLayoutInflater();
         //TODO WHY??
         View rowView= inflater.inflate(R.layout.single_line, null, true);
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.text);
+        TextView txtTitle = (TextView) rowView.findViewById(R.id.articleTitle);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         Picasso.with(context).load(imageurl[position]).placeholder(R.drawable.loading).error(R.drawable.error).resize(240, 180).centerInside().into(imageView);
         // set the according title for this row by selecting the title from 'position'
