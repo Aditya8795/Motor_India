@@ -12,13 +12,10 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
 
 public class RetrieveJSON extends AsyncTask<String, Void, JSONArray> {
     public static final String TAG = "RetrieveJSON";
@@ -89,14 +86,22 @@ public class RetrieveJSON extends AsyncTask<String, Void, JSONArray> {
 
             JSONArray actualResult = new JSONArray(result);
             // we need to send the url
-            JSONObject urlObj = new JSONObject();
-            urlObj.put(MotorIndiaPreferences.URL_JSON, url);
+            //JSONObject urlObj = new JSONObject();
+            //urlObj.put(MotorIndiaPreferences.URL_JSON, url);
             //Log.i(TAG, " Added url to the JSONArray " + actualResult.put(urlObj).toString());
 
             // Send the url along with article data
-            return actualResult.put(urlObj);
+            return actualResult;
         } catch (JSONException e) {
             Log.i("DEBUG", "JSON exception");
+            // it could be only a single object for display article
+            try {
+                JSONArray articleData = new JSONArray("["+result+"]");
+                return articleData;
+            } catch (JSONException e1) {
+                Log.i(TAG,"nope, what we recieved isnt a JSON obj either! ==> "+result);
+                e1.printStackTrace();
+            }
             e.printStackTrace();
         }
         return null;

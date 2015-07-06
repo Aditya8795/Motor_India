@@ -27,10 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ArticleList"
-            android:label="@string/title_activity_article_list" >
-        </activity>
-        <activity
             android:name=".ui.GCMData"
             android:label="@string/title_activity_gcmregister"
             android:screenOrientation="portrait" >
@@ -54,10 +50,10 @@
         <activity
             android:name=".ui.DisplayArticle"
             android:label="@string/title_activity_display_article"
-            android:parentActivityName=".ui.ArticleList" >
+            android:parentActivityName=".ui.MainMenu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="in.motorindiaonline.motorindia.ui.ArticleList" />
+                android:value="in.motorindiaonline.motorindia.ui.MainMenu" />
         </activity>
 
         <!-- [START gcm_listener] -->

@@ -52,4 +52,6 @@
     <string name="title_activity_display_article">DisplayArticle</string>
     <string name="advertisement">Advertisement shown at the bottom</string>
     <string name="title_activity_main_menu">Motor India</string>
+    <string name="imagearticle">main article image</string>
+    <string name="image">banner image</string>
 </resources>

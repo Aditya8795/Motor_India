@@ -9,7 +9,7 @@ Sender ID:
     */
 
     // give your server registration url here gcm_server_php/register.php
-    public static final String SERVER_URL = "http://7f0c99bd.ngrok.com/gcm/";
+    public static final String SERVER_URL = "http://130baf58.ngrok.com/gcm/motorIndia";
     // To Obtain a registration token
     public static final String SENDER_ID = "550448643561";
     // Amount of time (in milliseconds) that the splash screen should be shown

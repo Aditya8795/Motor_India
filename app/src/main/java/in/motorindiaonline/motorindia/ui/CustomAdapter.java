@@ -1,6 +1,7 @@
 package in.motorindiaonline.motorindia.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import in.motorindiaonline.motorindia.R;
+import in.motorindiaonline.motorindia.Utilities.MotorIndiaPreferences;
 
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
@@ -37,6 +39,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Element " + getPosition() + " clicked.");
+                    try {
+                        String articleID = articleJSONArray.getJSONObject(getPosition()).getString("id");
+                        String articleTitle = articleJSONArray.getJSONObject(getPosition()).getString("title");
+                        String imageURL = articleJSONArray.getJSONObject(getPosition()).getString("image");
+                        Log.i(TAG,"the id of the article is"+articleID);
+                        Intent intent = new Intent(c,DisplayArticle.class);
+                        intent.putExtra(MotorIndiaPreferences.ARTICLE_ID, articleID);
+                        intent.putExtra(MotorIndiaPreferences.ARTICLE_TITLE, articleTitle);
+                        intent.putExtra(MotorIndiaPreferences.IMAGE_URL, imageURL);
+                        c.startActivity(intent);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             textView = (TextView) v.findViewById(R.id.articleTitle);
@@ -82,11 +97,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
-
         // Get element from your dataSet at this position and replace the contents of the view
         // with that element
-        String title = "Click here to load more articles";
-        String imgURL = "http://thumbs.dreamstime.com/z/click-icon-hand-pointer-vector-eps-34474167.jpg";
+        String title = "Failed to fetch";
+        String imgURL = "http://www.motorindiaonline.in/wp-content/uploads/2012/11/mi-logo-Copy-450-red.png";
         try {
             title = articleJSONArray.getJSONObject(position).getString("title");
             imgURL = articleJSONArray.getJSONObject(position).getString("image");
@@ -96,7 +110,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             e.printStackTrace();
         }
         viewHolder.getTextView().setText(title);
-        Picasso.with(c).load(imgURL).placeholder(R.drawable.loading).error(R.drawable.error).resize(240, 180).centerInside().into(viewHolder.getImageView());
+        if(imgURL.isEmpty()){
+            imgURL = "http://www.motorindiaonline.in/wp-content/uploads/2012/11/mi-logo-Copy-450-red.png";
+        }
+        //Picasso.with(c).load(imgURL).placeholder(R.drawable.loading).error(R.drawable.error).resize(240, 180).centerInside().into(viewHolder.getImageView());
+        Picasso.with(c).load(imgURL).placeholder(R.drawable.loading).error(R.drawable.error).resize(240, 180).into(viewHolder.getImageView());
+
     }
 
     // Return the size of your dataSet (invoked by the layout manager)

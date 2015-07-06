@@ -16,4 +16,9 @@ public class MotorIndiaPreferences {
     public static final String  URL_JSON = "com.spider.motorindia.URL_JSON";
     public static final String  ARTICLE_DATA = "com.spider.motorindia.ARTICLE_DATA";
     public static final String  KEY_LAYOUT_MANAGER = "com.spider.motorindia.KEY_LAYOUT_MANAGER";
+    public static final String  ARTICLE_ID = "com.spider.motorindia.ARTICLE_ID";
+    public static final String  ARTICLE_TITLE = "com.spider.motorindia.ARTICLE_TITLE";
+    public static final String  IMAGE_URL = "com.spider.motorindia.IMAGE_URL";
+    public static final String  BANNER_JSON_ARRAY = "com.spider.motorindia.BANNER_JSON_ARRAY";
+    public static final String  BUNDLE_RECYCLER_LAYOUT = "com.spider.motorindia.BUNDLE_RECYCLER_LAYOUT";
 }
