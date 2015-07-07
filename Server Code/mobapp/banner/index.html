@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Banner Management System</title>
+
+    <!-- Include Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  </head>
+  <body>
+    <h1 class="text-center">Banner Control Panel</h1>
+    <!-- Table contains information about uploaded images -->
+    <h2 class="text-center">Uploaded Banners</h2>
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+          <thead>
+            <th>S. No.</th>
+            <th>File name</th>
+            <th>Category</th>
+            <th>Site URL</th>
+            <th>Image URL</th>
+            <th>Action</th>
+            <!-- Rename and Remove operations will be implemented -->
+          </thead>
+          <tbody id="bannerList">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Form for uploading a banner -->
+    <div class="row">
+      <h2 class='text-center'>Upload Banner</h2>
+      <div class="col-md-4 col-md-offset-4">
+        <form id="bannerForm" enctype="multipart/form-data">
+          <div class='form-group'>
+            <input class="form-control" type="text" name="name" placeholder="Please name the company"
+      required/>
+          </div>
+          <div class='form-group'>
+            <select id="categories" class="form-control" name="category" required="">
+              <option value="" selected disabled>Please choose a category</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input class="form-control" type="text" name="url"
+      placeholder="Please specify the URL of the company" required/>
+          </div>
+          <div class="form-group">
+            <input type="file" name="banner" required>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Upload Banner</button>
+        </form>
+      </div>
+    </div>
+    <!-- Include Bootstrap.js and jQuery -->
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
