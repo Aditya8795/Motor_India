@@ -41,7 +41,7 @@ class ArticleService {
     $title = $this->fix_encoding(get_the_title($article_id));
     $author = get_the_author_meta("user_nicename",$post->post_author);
     $content = $this->cleanContent($post->post_content,'<a>');
-    $image = $this->getImage($content,0);
+    $image = $this->getImage($post->post_content,0);
     $date = $post->post_date;
 
     $array = [
