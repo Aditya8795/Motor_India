@@ -281,7 +281,8 @@ public class MainMenu extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            //TODO launch intent to settings page
+            Intent myIntent = new Intent(MainMenu.this, MySettings.class);
+            this.startActivity(myIntent);
             return true;
         }
 

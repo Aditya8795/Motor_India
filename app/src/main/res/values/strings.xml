@@ -54,4 +54,7 @@
     <string name="title_activity_main_menu">Motor India</string>
     <string name="imagearticle">main article image</string>
     <string name="image">banner image</string>
+    <string name="pref_notification">Enable Push Notifications</string>
+    <string name="pref_notification_summ">Get notifications whenever new featured articles are released</string>
+    <string name="title_activity_my_settings">Settings</string>
 </resources>

@@ -102,6 +102,8 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent myIntent = new Intent(DisplayArticle.this, MySettings.class);
+            this.startActivity(myIntent);
             return true;
         }
 

@@ -99,6 +99,13 @@ public class SplashScreen extends ActionBarActivity {
         }, CommonData.SPLASH_SCREEN_DELAY);
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        // Resume progressBar
+        SplashScreen.mProgressBar.setVisibility(ProgressBar.VISIBLE);
+    }
+
 
 
 }

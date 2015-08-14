@@ -11,6 +11,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -85,6 +86,14 @@
         <activity
             android:name=".ui.MainMenu"
             android:label="@string/title_activity_main_menu" >
+        </activity>
+        <activity
+            android:name=".ui.MySettings"
+            android:label="@string/title_activity_my_settings"
+            android:parentActivityName=".ui.MainMenu" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.motorindiaonline.motorindia.ui.MainMenu" />
         </activity>
     </application>
 

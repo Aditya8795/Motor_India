@@ -21,4 +21,5 @@ public class MotorIndiaPreferences {
     public static final String  IMAGE_URL = "com.spider.motorindia.IMAGE_URL";
     public static final String  BANNER_JSON_ARRAY = "com.spider.motorindia.BANNER_JSON_ARRAY";
     public static final String  BUNDLE_RECYCLER_LAYOUT = "com.spider.motorindia.BUNDLE_RECYCLER_LAYOUT";
+    public static final String  KEY_PREF_NOTIFICATION = "pref_notification_motorIndia";
 }
