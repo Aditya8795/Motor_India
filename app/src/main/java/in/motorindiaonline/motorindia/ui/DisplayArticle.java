@@ -38,9 +38,11 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
         setContentView(R.layout.activity_display_article);
 
         // To get the icon on the back button in the top left corner
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        android.support.v7.app.ActionBar supportActionBar = getSupportActionBar();
+        assert supportActionBar != null;
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+
+        supportActionBar.setIcon(R.drawable.mi_logo);
 
 
         // launch thread to fetch article content
@@ -51,7 +53,7 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
 
         // We already have the title corresponding to the article in the ListView, use that and set the actionBar title
         title = intent.getStringExtra(MotorIndiaPreferences.ARTICLE_TITLE);
-        actionBar.setTitle(title);
+        supportActionBar.setTitle(title);
         // This sets the Title of the article just after the Image.
         // the actual content is set after the callback is done. for reasons given there.
         //TextView t = (TextView)findViewById(R.id.textViewTitle);
@@ -83,6 +85,8 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
         }
 
         mProgressBar = (ProgressBar)findViewById(R.id.articleProgressBar);
+
+
     }
 
 
@@ -120,7 +124,8 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
     public void onRequestCompleted(JSONArray result) {
         try {
             body = result.getJSONObject(0).getString("content");
-            date = "Date: "+result.getJSONObject(0).getString("date")+"\n\nAuthor: "+result.getJSONObject(0).getString("author");
+            //date = "Date: "+result.getJSONObject(0).getString("date")+"\n\nAuthor: "+result.getJSONObject(0).getString("author");
+            date = "Date: "+result.getJSONObject(0).getString("date");
         } catch (JSONException e) {
             // Auto-generated catch block
             e.printStackTrace();

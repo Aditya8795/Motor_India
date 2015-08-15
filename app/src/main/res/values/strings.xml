@@ -57,4 +57,5 @@
     <string name="pref_notification">Enable Push Notifications</string>
     <string name="pref_notification_summ">Get notifications whenever new featured articles are released</string>
     <string name="title_activity_my_settings">Settings</string>
+    <string name="masthead">MastHead of the magazine</string>
 </resources>

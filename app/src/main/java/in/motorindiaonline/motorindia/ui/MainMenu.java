@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -304,8 +303,6 @@ public class MainMenu extends ActionBarActivity
 
         // Check if Internet present
         if (!connectionDetector.isConnectedInternet()) {
-            //Stop progressBar
-            SplashScreen.mProgressBar.setVisibility(ProgressBar.GONE);
 
             // Internet Connection is not present, I make a special alert to get the user to access internet
             // Here as I need the dialog to be a inner class to send the intent and call finish
@@ -426,6 +423,9 @@ public class MainMenu extends ActionBarActivity
                 link = link +"impact-feature";
                 break;
         }
+
+        //Stop progressBar
+        SplashScreen.mProgressBar.setVisibility(ProgressBar.GONE);
 
         // Start a thread again to go fetch article data
         new RetrieveJSON(this).execute(link);
@@ -581,7 +581,7 @@ public class MainMenu extends ActionBarActivity
         }
 
         @Override
-        public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        public void onViewStateRestored(Bundle savedInstanceState) {
             super.onViewStateRestored(savedInstanceState);
             Log.i(TAG,"state restored called");
             if(savedInstanceState != null)

@@ -41,13 +41,16 @@ public class ConnectionDetector {
     }
 
     private boolean isConnectedMotorIndia() {
-        try {
-            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.motorindiaonline.in");
-            int returnVal = p1.waitFor();
-            return (returnVal==0);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        // try pinging 10 times, we mind have some packet loss
+        for(int i = 0; i<10; i++){
+            try {
+                Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.motorindiaonline.in");
+                int returnVal = p1.waitFor();
+                return (returnVal == 0);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         Log.i(TAG,"Not connected to a network through which we can access MotorIndia server");
         return false;
