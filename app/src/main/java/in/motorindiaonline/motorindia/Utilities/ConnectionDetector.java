@@ -30,8 +30,9 @@ public class ConnectionDetector {
                         // to most of the webPages.
                         // THUS we shall add httpParameters for ALL network operations otherwise
                         // we will have the app crash after waiting for a long time
-                        Log.i(TAG,"connected");
-                        return isConnectedMotorIndia();
+                        Log.i(TAG,"connected to Some network");
+                        return true;
+                        //return isConnectedMotorIndia();
                     }
                 }
             }
@@ -46,12 +47,13 @@ public class ConnectionDetector {
             try {
                 Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.motorindiaonline.in");
                 int returnVal = p1.waitFor();
+                Log.i(TAG,"The response code is "+Integer.toString(returnVal));
                 return (returnVal == 0);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
+
         Log.i(TAG,"Not connected to a network through which we can access MotorIndia server");
         return false;
     }

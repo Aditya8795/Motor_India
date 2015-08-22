@@ -222,7 +222,7 @@ public class MainMenu extends ActionBarActivity
                 mTitle = getString(R.string.title_section12);
                 break;
             case 12:
-                mTitle = getString(R.string.title_section12);
+                mTitle = getString(R.string.title_section13);
                 break;
             case 13:
                 mTitle = getString(R.string.title_section14);

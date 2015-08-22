@@ -29,6 +29,7 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
     String body = "";
     String date = "";
     ProgressBar mProgressBar;
+    public String url;
 
     String AdvtURL = "http://www.infineon.com/cms/en/applications/automotive/safety/tpms/";
 
@@ -42,13 +43,10 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
         assert supportActionBar != null;
         supportActionBar.setDisplayHomeAsUpEnabled(true);
 
-        supportActionBar.setIcon(R.drawable.mi_logo);
-
-
         // launch thread to fetch article content
         Intent intent = getIntent();
         String articleID = intent.getStringExtra(MotorIndiaPreferences.ARTICLE_ID);
-        String url = "http://www.motorindiaonline.in/mobapp/?a_id="+articleID;
+        url = "http://www.motorindiaonline.in/mobapp/?a_id="+articleID;
         new RetrieveJSON(this).execute(url);
 
         // We already have the title corresponding to the article in the ListView, use that and set the actionBar title
@@ -59,16 +57,16 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
         //TextView t = (TextView)findViewById(R.id.textViewTitle);
         //t.setText(title);
 
+
         ImageView imageView = (ImageView) findViewById(R.id.imageViewMainArticle);
         String imageURL = intent.getStringExtra(MotorIndiaPreferences.IMAGE_URL);
         // This starts the asynchronous call for the main article image
-        Picasso.with(this).load(imageURL).placeholder(R.drawable.white).error(R.drawable.error).fit().centerCrop().into(imageView);
+        Picasso.with(this).load(imageURL).placeholder(R.drawable.white).error(R.drawable.error).into(imageView);
 
         ImageView banner = (ImageView) findViewById(R.id.imageViewAdvertisement);
         SharedPreferences prefs = getSharedPreferences(MotorIndiaPreferences.BANNER_JSON_ARRAY, MODE_PRIVATE);
         String strJson = prefs.getString("JSONData", "0");//second parameter is necessary ie.,Value to return if this preference does not exist.
         Log.i("BANNER", "we have banner data stored (1/0) => " + strJson);
-        assert strJson != null;
         if(!strJson.equals("0")){
             Log.i("BANNER","fetched bannerData");
             try {
@@ -83,10 +81,7 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
                 e.printStackTrace();
             }
         }
-
         mProgressBar = (ProgressBar)findViewById(R.id.articleProgressBar);
-
-
     }
 
 
@@ -122,14 +117,20 @@ public class DisplayArticle extends ActionBarActivity implements RetrieveJSON.My
 
     @Override
     public void onRequestCompleted(JSONArray result) {
+        if(result == null){
+            Log.i("DisplayArticle Callback","Thread returned NULL");
+            // This could mean that the user is waiting for the article to load, so we need to request again
+            new RetrieveJSON(this).execute(url);
+            return;
+        }
         try {
             body = result.getJSONObject(0).getString("content");
-            //date = "Date: "+result.getJSONObject(0).getString("date")+"\n\nAuthor: "+result.getJSONObject(0).getString("author");
-            date = "Date: "+result.getJSONObject(0).getString("date");
+            date = "Date: "+result.getJSONObject(0).getString("date")+"\n\nAuthor: "+result.getJSONObject(0).getString("author");
         } catch (JSONException e) {
             // Auto-generated catch block
             e.printStackTrace();
         }
+
         mProgressBar.setVisibility(ProgressBar.GONE);
 
         // I set the title here even when I have the title during OnCreate as it looks better if both title and body were set at the same time

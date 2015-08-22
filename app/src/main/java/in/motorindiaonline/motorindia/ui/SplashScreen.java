@@ -49,11 +49,12 @@ public class SplashScreen extends ActionBarActivity {
             public void run() {
                 Log.i(TAG, "checking connection");
                 ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
-
-                // Check if Internet present
-                if (!connectionDetector.isConnectedInternet()) {
+                Boolean connectionStatus = connectionDetector.isConnectedInternet();
+                Log.i(TAG,"The connection is "+connectionStatus);
+                // if Not connected issue alert
+                if (!connectionStatus) {
                     //Stop progressBar
-                    SplashScreen.mProgressBar.setVisibility(ProgressBar.GONE);
+                    //SplashScreen.mProgressBar.setVisibility(ProgressBar.GONE);
 
                     // Internet Connection is not present, I make a special alert to get the user to access internet
                     // Here as I need the dialog to be a inner class to send the intent and call finish
@@ -79,7 +80,6 @@ public class SplashScreen extends ActionBarActivity {
                             .show();
                     return;
                 }
-                Log.i(TAG, "finished checking");
 
                 SharedPreferences prefs = getSharedPreferences(MotorIndiaPreferences.GENERAL_DATA, MODE_PRIVATE);
                 final Boolean GCMRegistered = prefs.getBoolean(MotorIndiaPreferences.GCM_REGISTRATION_STATUS, false);
@@ -105,7 +105,4 @@ public class SplashScreen extends ActionBarActivity {
         // Resume progressBar
         SplashScreen.mProgressBar.setVisibility(ProgressBar.VISIBLE);
     }
-
-
-
 }
